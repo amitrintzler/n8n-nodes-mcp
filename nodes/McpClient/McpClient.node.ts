@@ -56,16 +56,25 @@ export class McpClient implements INodeType {
 					},
 				},
 			},
-			{
-				name: 'mcpClientHttpApi',
-				required: false,
-				displayOptions: {
-					show: {
-						connectionType: ['http'],
-					},
-				},
-			},
-		],
+                        {
+                                name: 'mcpClientHttpApi',
+                                required: false,
+                                displayOptions: {
+                                        show: {
+                                                connectionType: ['http'],
+                                        },
+                                },
+                        },
+                        {
+                                name: 'customAuthJson',
+                                required: false,
+                                displayOptions: {
+                                        show: {
+                                                connectionType: ['http', 'sse'],
+                                        },
+                                },
+                        },
+                ],
 		properties: [
 			{
 				displayName: 'Connection Type',
@@ -225,22 +234,35 @@ export class McpClient implements INodeType {
 				timeout = httpCredentials.httpTimeout as number || 60000;
 
 				// Parse headers
-				let headers: Record<string, string> = {};
-				if (httpCredentials.headers) {
-					const headerLines = (httpCredentials.headers as string).split('\n');
-					for (const line of headerLines) {
+                                let headers: Record<string, string> = {};
+                                if (httpCredentials.headers) {
+                                        const headerLines = (httpCredentials.headers as string).split('\n');
+                                        for (const line of headerLines) {
 						const equalsIndex = line.indexOf('=');
 						// Ensure '=' is present and not the first character of the line
 						if (equalsIndex > 0) {
 							const name = line.substring(0, equalsIndex).trim();
 							const value = line.substring(equalsIndex + 1).trim();
 							// Add to headers object if key is not empty and value is defined
-							if (name && value !== undefined) {
-								headers[name] = value;
-							}
-						}
-					}
-				}
+                                                        if (name && value !== undefined) {
+                                                                headers[name] = value;
+                                                        }
+                                                }
+                                        }
+                                }
+
+                                const customAuth = await this.getCredentials('customAuthJson');
+                                if (customAuth?.authJson) {
+                                        try {
+                                                const customHeaders =
+                                                        typeof customAuth.authJson === 'string'
+                                                                ? JSON.parse(customAuth.authJson as string)
+                                                                : (customAuth.authJson as Record<string, string>);
+                                                headers = { ...headers, ...customHeaders };
+                                        } catch (error) {
+                                                throw new NodeOperationError(this.getNode(), 'Invalid custom authentication JSON');
+                                        }
+                                }
 
 				const requestInit: RequestInit = { headers };
 				if (messagesPostEndpoint) {
@@ -263,22 +285,35 @@ export class McpClient implements INodeType {
 				timeout = sseCredentials.sseTimeout as number || 60000;
 
 				// Parse headers
-				let headers: Record<string, string> = {};
-				if (sseCredentials.headers) {
-					const headerLines = (sseCredentials.headers as string).split('\n');
-					for (const line of headerLines) {
+                                let headers: Record<string, string> = {};
+                                if (sseCredentials.headers) {
+                                        const headerLines = (sseCredentials.headers as string).split('\n');
+                                        for (const line of headerLines) {
 						const equalsIndex = line.indexOf('=');
 						// Ensure '=' is present and not the first character of the line
 						if (equalsIndex > 0) {
 							const name = line.substring(0, equalsIndex).trim();
 							const value = line.substring(equalsIndex + 1).trim();
 							// Add to headers object if key is not empty and value is defined
-							if (name && value !== undefined) {
-								headers[name] = value;
-							}
-						}
-					}
-				}
+                                                        if (name && value !== undefined) {
+                                                                headers[name] = value;
+                                                        }
+                                                }
+                                        }
+                                }
+
+                                const customAuth = await this.getCredentials('customAuthJson');
+                                if (customAuth?.authJson) {
+                                        try {
+                                                const customHeaders =
+                                                        typeof customAuth.authJson === 'string'
+                                                                ? JSON.parse(customAuth.authJson as string)
+                                                                : (customAuth.authJson as Record<string, string>);
+                                                headers = { ...headers, ...customHeaders };
+                                        } catch (error) {
+                                                throw new NodeOperationError(this.getNode(), 'Invalid custom authentication JSON');
+                                        }
+                                }
 
 				// Create SSE transport with dynamic import to avoid TypeScript errors
 				transport = new SSEClientTransport(

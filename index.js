@@ -5,9 +5,10 @@ module.exports = {
 	nodeTypes: {
 		mcpClient: McpClient,
 	},
-	credentialTypes: {
-		mcpClientApi: require('./dist/credentials/McpClientApi.credentials.js').McpClientApi,
-		mcpClientSseApi: require('./dist/credentials/McpClientSseApi.credentials.js').McpClientSseApi,
-		mcpClientHttpApi: require('./dist/credentials/McpClientHttpApi.credentials.js').McpClientHttpApi,
-	},
+        credentialTypes: {
+                mcpClientApi: require('./dist/credentials/McpClientApi.credentials.js').McpClientApi,
+                mcpClientSseApi: require('./dist/credentials/McpClientSseApi.credentials.js').McpClientSseApi,
+                mcpClientHttpApi: require('./dist/credentials/McpClientHttpApi.credentials.js').McpClientHttpApi,
+                customAuthJson: require('./dist/credentials/CustomAuthJson.credentials.js').CustomAuthJson,
+        },
 };
