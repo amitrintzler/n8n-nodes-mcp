@@ -36,11 +36,12 @@
 	],
 	"n8n": {
 		"n8nNodesApiVersion": 1,
-		"credentials": [
-			"dist/credentials/McpClientApi.credentials.js",
-			"dist/credentials/McpClientSseApi.credentials.js",
-			"dist/credentials/McpClientHttpApi.credentials.js"
-		],
+                "credentials": [
+                        "dist/credentials/McpClientApi.credentials.js",
+                        "dist/credentials/McpClientSseApi.credentials.js",
+                        "dist/credentials/McpClientHttpApi.credentials.js",
+                        "dist/credentials/CustomAuthJson.credentials.js"
+                ],
 		"nodes": [
 			"dist/nodes/McpClient/McpClient.node.js"
 		]

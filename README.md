@@ -56,7 +56,7 @@ Also pay attention to Environment Variables for [using tools in AI Agents](#usin
 
 ## Credentials
 
-The MCP Client node supports three types of credentials to connect to an MCP server:
+The MCP Client node supports four types of credentials to connect to an MCP server:
 
 ### Command-line Based Transport (STDIO)
 
@@ -122,6 +122,10 @@ This example shows how to connect to a locally running MCP server using Server-S
    - Set the Connection Type to `Server-Sent Events (SSE)`
    - Select your SSE credentials
    - Execute the workflow to see the results
+
+### Custom Authentication JSON
+
+Use this credential to provide additional authentication headers or tokens. Enter a JSON object where each key-value pair represents a header name and its value. These headers will be merged with those from your HTTP or SSE credentials.
 
 > **Note:** For new projects, HTTP Streamable is strongly recommended.
 
